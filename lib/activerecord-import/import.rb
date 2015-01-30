@@ -174,12 +174,17 @@ class ActiveRecord::Base
           models = args.first
           column_names = self.column_names.dup
         end
+
+        encrypted_columns = []
+        encrypted_columns = self.encrypted_attributes.keys.map(&:to_s) if self.respond_to?(:encrypted_attributes)
         
         array_of_attributes = models.map do |model|
           # this next line breaks sqlite.so with a segmentation fault
           # if model.new_record? || options[:on_duplicate_key_update]
             column_names.map do |name|
-              model.send( "#{name}_before_type_cast" )
+              # attr_encrypted decrypts using the attr_reader. However, because we want to store the encrypted value
+              # we must bypass the attr_reader so that we are sending the cipher text as the SQL parameter.
+              encrypted_columns.include?(name) ? model.read_attribute(name) : model.send( "#{name}_before_type_cast")
             end
           # end
         end
