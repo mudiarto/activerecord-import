@@ -87,7 +87,6 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<activerecord>, [">= 3.0pre"])
     s.add_dependency(%q<rake>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 1.4.0"])
-    s.add_dependency(%q<activerecord>, [">= 3.0pre"])
   end
 end
 
